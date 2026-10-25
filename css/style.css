@@ -496,6 +496,7 @@ body {
             grid-template-columns: 1fr;
             gap: 3rem;
             align-items: center;
+            padding-top: 2rem;
         }
 
         .story-text {
@@ -1190,7 +1191,7 @@ body {
 /* ============================= */
 /* Contact Section */
 .contact-section {
-  padding: 60px 20px;
+  padding: 80px 20px;
   max-width: 1200px;
   margin: auto;
 }
