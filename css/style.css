@@ -1858,3 +1858,434 @@ body {
                 gap: 1rem;
             }
         }
+
+
+/* ============================================= */
+/* Graphic Design Showcase: view toggle + carousel */
+/* (keep this block at the very bottom)            */
+/* ============================================= */
+
+/* `hidden` must win over the display values set elsewhere */
+.gallery-grid[hidden],
+.cf[hidden],
+.cf-desc[hidden],
+.cf-info[hidden],
+.cf-stage[hidden] {
+  display: none !important;
+}
+
+.gallery .gallery-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.gallery .gallery-header h2 {
+  margin-bottom: 1.75rem;
+}
+
+.gallery-item:focus-visible {
+  outline: 3px solid #18ddc3;
+  outline-offset: 3px;
+}
+
+/* ---------- View toggle ---------- */
+.view-toggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(190, 233, 232, 0.08);
+  border: 1px solid rgba(190, 233, 232, 0.25);
+}
+
+.view-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #BEE9E8;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.view-toggle-btn:hover {
+  background: rgba(190, 233, 232, 0.16);
+}
+
+.view-toggle-btn.active {
+  background: #BEE9E8;
+  color: #1B4965;
+}
+
+.view-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+.view-toggle-btn:focus-visible,
+.cf-arrow:focus-visible,
+.cf-item:focus-visible {
+  outline: 3px solid #18ddc3;
+  outline-offset: 3px;
+}
+
+/* ---------- 3D cover-flow carousel ---------- */
+.cf {
+  --cf-w: 340px;
+  --cf-h: 440px;
+  --cf-frame-bg: #f3f5f7;
+  --cf-dur: 500ms;
+  --cf-ease: cubic-bezier(0.22, 0.8, 0.3, 1);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cf-stage {
+  position: relative;
+  /* height follows the images on screen (set by JS); fallback until then */
+  height: var(--cf-stage-h, calc(var(--cf-h) + 60px));
+  overflow: hidden;
+  touch-action: pan-y;
+  transition: height var(--cf-dur) var(--cf-ease);
+}
+
+.cf-track {
+  position: absolute;
+  inset: 0;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+
+.cf-item {
+  --x: 0px;
+  --z: 0px;
+  --r: 0deg;
+  --s: 1;
+  --o: 1;
+  --b: 0px;
+  --ar: 0.8; /* width / height of the image; JS sets the real value */
+  /* fit the image inside a --cf-w x --cf-h box, keeping its own shape */
+  --iw: min(var(--cf-w), calc(var(--cf-h) * var(--ar)));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--iw);
+  height: calc(var(--iw) / var(--ar));
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px;
+  background: var(--cf-frame-bg);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transform: translate(-50%, -50%) translate3d(var(--x), 0, var(--z)) rotateY(var(--r)) scale(var(--s));
+  opacity: var(--o);
+  filter: blur(var(--b));
+  transition:
+    transform var(--cf-dur) var(--cf-ease),
+    opacity var(--cf-dur) var(--cf-ease),
+    filter var(--cf-dur) var(--cf-ease),
+    box-shadow var(--cf-dur) var(--cf-ease);
+  will-change: transform, opacity;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cf-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* never crop a design */
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* Shown only if an image fails to load */
+.cf-fallback {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #5b6b7b;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.cf-item--broken .cf-img {
+  display: none;
+}
+
+.cf-item--broken .cf-fallback {
+  display: flex;
+}
+
+/* Five visible positions + a hidden position either side */
+.cf-item[data-pos="0"] {
+  --x: 0px;
+  --z: 0px;
+  --r: 0deg;
+  --s: 1;
+  --o: 1;
+  --b: 0px;
+  z-index: 5;
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.55);
+  cursor: zoom-in;
+}
+
+.cf-item[data-pos="-1"] {
+  --x: calc(var(--cf-w) * -0.74);
+  --z: -120px;
+  --r: 18deg;
+  --s: 0.82;
+  --o: 0.92;
+  --b: 0px;
+  z-index: 4;
+}
+
+.cf-item[data-pos="1"] {
+  --x: calc(var(--cf-w) * 0.74);
+  --z: -120px;
+  --r: -18deg;
+  --s: 0.82;
+  --o: 0.92;
+  --b: 0px;
+  z-index: 4;
+}
+
+.cf-item[data-pos="-2"] {
+  --x: calc(var(--cf-w) * -1.22);
+  --z: -240px;
+  --r: 26deg;
+  --s: 0.66;
+  --o: 0.55;
+  --b: 2px;
+  z-index: 3;
+}
+
+.cf-item[data-pos="2"] {
+  --x: calc(var(--cf-w) * 1.22);
+  --z: -240px;
+  --r: -26deg;
+  --s: 0.66;
+  --o: 0.55;
+  --b: 2px;
+  z-index: 3;
+}
+
+.cf-item[data-pos="-3"],
+.cf-item[data-pos="3"] {
+  --z: -320px;
+  --s: 0.55;
+  --o: 0;
+  --b: 3px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cf-item[data-pos="-3"] {
+  --x: calc(var(--cf-w) * -1.5);
+  --r: 30deg;
+}
+
+.cf-item[data-pos="3"] {
+  --x: calc(var(--cf-w) * 1.5);
+  --r: -30deg;
+}
+
+/* Arrows */
+.cf-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  width: 48px;
+  height: 48px;
+  margin-top: -24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(190, 233, 232, 0.35);
+  border-radius: 50%;
+  background: rgba(13, 17, 23, 0.65);
+  color: #BEE9E8;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.cf-arrow:hover {
+  background: #BEE9E8;
+  color: #1B4965;
+}
+
+.cf-arrow--prev {
+  left: 8px;
+}
+
+.cf-arrow--next {
+  right: 8px;
+}
+
+.cf-arrow svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cf--single .cf-arrow {
+  display: none;
+}
+
+/* Title + description under the active image */
+.cf-info {
+  max-width: 640px;
+  min-height: 7.5rem;
+  margin: 28px auto 0;
+  padding: 0 16px;
+  text-align: center;
+}
+
+.cf-title {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.cf-desc {
+  max-width: 520px;
+  margin: 0 auto 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+
+.cf-count {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: rgba(190, 233, 232, 0.7);
+}
+
+.cf-info--swap .cf-title,
+.cf-info--swap .cf-desc {
+  animation: cfSwap 400ms var(--cf-ease) both;
+}
+
+@keyframes cfSwap {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.cf-empty {
+  padding: 3rem 1rem;
+  color: #cbd5e1;
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1100px) {
+  .cf {
+    --cf-w: 290px;
+    --cf-h: 380px;
+  }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 768px) {
+  .cf {
+    --cf-w: 230px;
+    --cf-h: 310px;
+  }
+
+  .cf-arrow {
+    width: 44px;
+    height: 44px;
+    margin-top: -22px;
+  }
+
+  .cf-title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .cf {
+    --cf-w: 190px;
+    --cf-h: 260px;
+  }
+
+  .cf-arrow--prev {
+    left: 2px;
+  }
+
+  .cf-arrow--next {
+    right: 2px;
+  }
+
+  /* Only the nearest previews on small screens */
+  .cf-item[data-pos="-2"],
+  .cf-item[data-pos="2"] {
+    --o: 0;
+    pointer-events: none;
+  }
+
+  .view-toggle-btn {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .cf-item,
+  .cf-stage,
+  .cf-arrow,
+  .view-toggle-btn {
+    transition: none;
+  }
+
+  .cf-info--swap .cf-title,
+  .cf-info--swap .cf-desc {
+    animation: none;
+  }
+}
+
+/* ---------- Desktop lightbox preview size ---------- */
+@media (min-width: 769px) {
+  .lightbox-content {
+    width: 70vw;
+    max-width: 850px;
+    max-height: 80vh;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-content img {
+    max-width: 100%;
+    max-height: 75vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+}
